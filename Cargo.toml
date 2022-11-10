@@ -1,0 +1,30 @@
+[package]
+name = "substreams-eth-block-meta"
+version = "0.1.0"
+description = "Substream Ethereum Block Meta Substreams tracking block at day/month boundaries"
+edition = "2021"
+repository = "https://github.com/streamingfast/substreams-eth-block-meta"
+
+[lib]
+name = "substreams"
+crate-type = ["cdylib"]
+
+[dependencies]
+prost = "0.11"
+prost-types = "0.11"
+substreams = "0.3.2"
+substreams-ethereum = "0.6.2"
+chrono = { version = "0.4", features = [ "std" ], default-features = false }
+
+# # Required so that ethabi > ethereum-types build correctly under wasm32-unknown-unknown
+# [target.wasm32-unknown-unknown.dependencies]
+# getrandom = { version = "0.2", features = ["custom"] }
+
+# [build-dependencies]
+# anyhow = "1"
+# substreams-ethereum = "0.6.2"
+
+[profile.release]
+lto = true
+opt-level = 's'
+strip = "debuginfo"

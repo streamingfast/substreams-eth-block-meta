@@ -1,0 +1,32 @@
+specVersion: v0.1.0
+package:
+  name: "substreams_eth_block_meta"
+  version: v0.1.0
+
+protobuf:
+  files:
+    - block_meta.proto
+  importPaths:
+    - ./proto
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+
+modules:
+  - name: store_block_meta_start
+    kind: store
+    initialBlock: 0
+    updatePolicy: set_if_not_exists
+    valueType: proto:eth.block_meta.v1.BlockMeta
+    inputs:
+      - source: sf.ethereum.type.v2.Block
+
+  - name: store_block_meta_end
+    kind: store
+    initialBlock: 0
+    updatePolicy: set
+    valueType: proto:eth.block_meta.v1.BlockMeta
+    inputs:
+      - source: sf.ethereum.type.v2.Block
