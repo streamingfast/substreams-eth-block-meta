@@ -1,0 +1,8 @@
+type BlockMeta @entity {
+    id: ID!
+    at: String!
+    number: BigInt!
+    hash: Bytes!
+    parent_hash: Bytes!
+    timestamp: String!
+}

@@ -1,9 +1,27 @@
+use anyhow::Context;
 use chrono::{Datelike, Duration, NaiveDate, NaiveDateTime, NaiveTime};
 use substreams_ethereum::pb::eth::v2 as eth;
 
+#[derive(Debug, PartialEq)]
 pub struct BlockTimestamp(chrono::NaiveDateTime);
 
 impl BlockTimestamp {
+    pub fn from_key(key: &str) -> Self {
+        Self::try_from_key(key).unwrap()
+    }
+
+    pub fn try_from_key(key: &str) -> Result<Self, anyhow::Error> {
+        let millis = u64::from_str_radix(key, 10)
+            .with_context(|| format!("invalid timestamp key {}", key))?;
+        let seconds = millis / 1000;
+        let nanos = (millis % 1000) * 1000000;
+
+        Ok(BlockTimestamp(NaiveDateTime::from_timestamp(
+            seconds as i64,
+            nanos as u32,
+        )))
+    }
+
     pub fn from_block(blk: &eth::Block) -> Self {
         let header = blk.header.as_ref().unwrap();
         let timestamp = header.timestamp.as_ref().unwrap();
@@ -59,6 +77,18 @@ impl BlockTimestamp {
     }
 }
 
+impl ToString for BlockTimestamp {
+    fn to_string(&self) -> String {
+        self.0.to_string()
+    }
+}
+
+impl Into<String> for BlockTimestamp {
+    fn into(self) -> String {
+        self.0.to_string()
+    }
+}
+
 fn last_time() -> NaiveTime {
     NaiveTime::from_hms_nano(23, 59, 59, 999999999)
 }
@@ -82,6 +112,19 @@ mod tests {
         millis: u32,
     ) -> BlockTimestamp {
         BlockTimestamp(NaiveDate::from_ymd(year, month, day).and_hms_milli(hour, min, sec, millis))
+    }
+
+    #[test]
+    fn it_block_timestamp_try_from_key() {
+        assert_eq!(
+            BlockTimestamp::from_key("1435708800000"),
+            timestamp(2015, 07, 01, 00, 00, 00, 000)
+        );
+
+        assert_eq!(
+            BlockTimestamp::from_key("1669852799999"),
+            timestamp(2022, 11, 30, 23, 59, 59, 999)
+        );
     }
 
     #[test]

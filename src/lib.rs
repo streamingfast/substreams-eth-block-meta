@@ -1,10 +1,14 @@
 mod block_timestamp;
+#[path = "graph_out.rs"]
+mod graph;
 mod pb;
 
 use block_timestamp::BlockTimestamp;
 use pb::block_meta::BlockMeta;
-use substreams::prelude::*;
-use substreams::store::{StoreSetIfNotExistsProto, StoreSetProto};
+use substreams::errors::Error;
+use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
+use substreams::{prelude::*, store};
+use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_ethereum::pb::eth::v2 as eth;
 
 #[substreams::handlers::store]
@@ -21,6 +25,18 @@ fn store_block_meta_end(blk: eth::Block, s: StoreSetProto<BlockMeta>) {
 
     s.set(meta.number, timestamp.end_of_day_key(), &meta);
     s.set(meta.number, timestamp.end_of_month_key(), &meta);
+}
+
+#[substreams::handlers::map]
+pub fn graph_out(
+    block_meta_start: store::Deltas<DeltaProto<BlockMeta>>,
+    block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
+) -> Result<EntityChanges, Error> {
+    let mut entity_changes: EntityChanges = Default::default();
+    graph::block_meta_to_entities_changes(&mut entity_changes, block_meta_start);
+    graph::block_meta_to_entities_changes(&mut entity_changes, block_meta_end);
+
+    Ok(entity_changes)
 }
 
 fn block_to_block_meta(blk: eth::Block) -> (BlockTimestamp, BlockMeta) {

@@ -1,11 +1,36 @@
+ENDPOINT ?= mainnet.eth.streamingfast.io:443
+GRAPH_CONFIG ?= ../graph-node-dev/config/graphman.toml
+
 .PHONY: build
 build:
 	cargo build --target wasm32-unknown-unknown --release
 
 .PHONY: stream
-stream:
-	substreams run -e mainnet.eth.streamingfast.io:443 substreams.yaml store_block_meta_start,store_block_meta_end -t +10
+stream: build
+	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -t +10
+
+.PHONY: stream_graph
+stream_graph: build
+	substreams run -e $(ENDPOINT) substreams.yaml graph_out -t +10
+
+.PHONY: backprocess
+backprocess: build
+	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -s 15941026 -t +1
 
 .PHONY: codegen
 codegen:
 	substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
+
+.PHONE: package
+package: build
+	substreams pack -o substreams.spkg substreams.yaml
+
+.PHONE: deploy_local
+deploy_local: package
+	graph build --ipfs http://localhost:5001 subgraph.yaml
+	graph create block_meta --node http://127.0.0.1:8020
+	graph deploy --node http://127.0.0.1:8020 --ipfs http://127.0.0.1:5001 --version-label v0.0.1 block_meta subgraph.yaml
+
+.PHONE: undeploy_local
+undeploy_local:
+	graphman --config "$(GRAPH_CONFIG)" drop --force block_meta
