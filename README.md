@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-A Substreams extracting block metadata per day (start/end) and per month (start/end). Using this Substreams, you will essentials be able to answer these questions:
+A Substreams extracting Ethereum block metadata per day (start/end) and per month (start/end). Using this Substreams, you will essentials be able to answer these questions:
 
 - What is the block at the start of day June 30th, 2022?
 - What is the block at the end of July 2022?

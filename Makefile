@@ -9,6 +9,10 @@ build:
 stream: build
 	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -t +10
 
+.PHONY: stream_db
+stream_db: build
+	substreams run -e $(ENDPOINT) substreams.yaml db_out -t +10
+
 .PHONY: stream_graph
 stream_graph: build
 	substreams run -e $(ENDPOINT) substreams.yaml graph_out -t +10

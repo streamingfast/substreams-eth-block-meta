@@ -1,13 +1,17 @@
 mod block_timestamp;
+#[path = "db_out.rs"]
+mod db;
 #[path = "graph_out.rs"]
 mod graph;
 mod pb;
+mod schema;
 
 use block_timestamp::BlockTimestamp;
 use pb::block_meta::BlockMeta;
 use substreams::errors::Error;
 use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};
+use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_ethereum::pb::eth::v2 as eth;
 
@@ -25,6 +29,18 @@ fn store_block_meta_end(blk: eth::Block, s: StoreSetProto<BlockMeta>) {
 
     s.set(meta.number, timestamp.end_of_day_key(), &meta);
     s.set(meta.number, timestamp.end_of_month_key(), &meta);
+}
+
+#[substreams::handlers::map]
+pub fn db_out(
+    block_meta_start: store::Deltas<DeltaProto<BlockMeta>>,
+    block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
+) -> Result<DatabaseChanges, Error> {
+    let mut database_changes: DatabaseChanges = Default::default();
+    db::block_meta_to_database_changes(&mut database_changes, block_meta_start);
+    db::block_meta_to_database_changes(&mut database_changes, block_meta_end);
+
+    Ok(database_changes)
 }
 
 #[substreams::handlers::map]
