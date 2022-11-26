@@ -752,9 +752,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-database-change"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e88c29b4df47dd33d141b7ada3d2a42a87f29b62f5882d76f8bf7c7226ac6740"
+checksum = "cc19d6e0e74e7e4d7d0fbc0781615d46acd86a06de0f9e2eb9dc0016373bab10"
 dependencies = [
  "base64",
  "prost",

@@ -1,4 +1,7 @@
-use substreams::store::{self, DeltaProto};
+use substreams::{
+    store::{self, DeltaProto},
+    Hex,
+};
 use substreams_database_change::pb::database::{table_change::Operation, DatabaseChanges};
 
 use crate::{block_timestamp::BlockTimestamp, pb::block_meta::BlockMeta};
@@ -42,8 +45,8 @@ fn push_create(
         .push_change("BlockMeta", key, ordinal, Operation::Create)
         .change("at", (None, timestamp))
         .change("number", (None, value.number))
-        .change("hash", (None, value.hash))
-        .change("parent_hash", (None, value.parent_hash))
+        .change("hash", (None, Hex(value.hash)))
+        .change("parent_hash", (None, Hex(value.parent_hash)))
         .change("timestamp", (None, value.timestamp.unwrap()));
 }
 
@@ -57,10 +60,10 @@ fn push_update(
     changes
         .push_change("BlockMeta", key, ordinal, Operation::Update)
         .change("number", (old_value.number, new_value.number))
-        .change("hash", (old_value.hash, new_value.hash))
+        .change("hash", (Hex(old_value.hash), Hex(new_value.hash)))
         .change(
             "parent_hash",
-            (old_value.parent_hash, new_value.parent_hash),
+            (Hex(old_value.parent_hash), Hex(new_value.parent_hash)),
         )
         .change(
             "timestamp",
