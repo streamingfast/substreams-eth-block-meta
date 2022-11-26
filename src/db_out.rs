@@ -42,7 +42,7 @@ fn push_create(
     value: BlockMeta,
 ) {
     changes
-        .push_change("BlockMeta", key, ordinal, Operation::Create)
+        .push_change("block_meta", key, ordinal, Operation::Create)
         .change("at", (None, timestamp))
         .change("number", (None, value.number))
         .change("hash", (None, Hex(value.hash)))
@@ -58,7 +58,7 @@ fn push_update(
     new_value: BlockMeta,
 ) {
     changes
-        .push_change("BlockMeta", key, ordinal, Operation::Update)
+        .push_change("block_meta", key, ordinal, Operation::Update)
         .change("number", (old_value.number, new_value.number))
         .change("hash", (Hex(old_value.hash), Hex(new_value.hash)))
         .change(
