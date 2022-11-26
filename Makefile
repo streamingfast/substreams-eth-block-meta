@@ -1,5 +1,6 @@
 ENDPOINT ?= mainnet.eth.streamingfast.io:443
 GRAPH_CONFIG ?= ../graph-node-dev/config/graphman.toml
+STOP_BLOCK ?= +10
 
 .PHONY: build
 build:
@@ -7,19 +8,15 @@ build:
 
 .PHONY: stream
 stream: build
-	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -t +10
+	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -t $(STOP_BLOCK)
 
 .PHONY: stream_db
 stream_db: build
-	substreams run -e $(ENDPOINT) substreams.yaml db_out -t +10
+	substreams run -e $(ENDPOINT) substreams.yaml db_out -t $(STOP_BLOCK)
 
 .PHONY: stream_graph
 stream_graph: build
-	substreams run -e $(ENDPOINT) substreams.yaml graph_out -t +10
-
-.PHONY: backprocess
-backprocess: build
-	substreams run -e $(ENDPOINT) substreams.yaml store_block_meta_start,store_block_meta_end -s 15941026 -t +1
+	substreams run -e $(ENDPOINT) substreams.yaml graph_out -t $(STOP_BLOCK)
 
 .PHONY: codegen
 codegen:
