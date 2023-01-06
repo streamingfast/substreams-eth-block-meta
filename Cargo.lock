@@ -787,6 +787,7 @@ dependencies = [
  "substreams-database-change",
  "substreams-entity-change",
  "substreams-ethereum",
+ "substreams-sink-kv",
 ]
 
 [[package]]
@@ -860,6 +861,16 @@ dependencies = [
  "quote",
  "syn",
  "thiserror",
+]
+
+[[package]]
+name = "substreams-sink-kv"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "prost",
+ "prost-types",
+ "substreams",
 ]
 
 [[package]]
