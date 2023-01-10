@@ -753,9 +753,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-database-change"
-version = "0.2.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "625548bb5c19c02829049708389e9fcbfc88574873901ac4e2bca5a0ebc73c11"
+checksum = "bcade6ad8e99eaee1c73ddf2a85c278a931333d33d71d52504e5ab45cc242f4c"
 dependencies = [
  "base64",
  "prost",
@@ -765,9 +765,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-entity-change"
-version = "0.3.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c81fb0794efb438c5743c821ec76528c38878010c30d4a79d70799eac68837f6"
+checksum = "e190a96a9baed17f3d16af8b375a236d1b549dbf86b6ff142417fc1cd57eeeb9"
 dependencies = [
  "base64",
  "prost",
@@ -777,7 +777,7 @@ dependencies = [
 
 [[package]]
 name = "substreams-eth-block-meta"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -865,7 +865,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-sink-kv"
-version = "0.1.0"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbbba84664b7c0f95a434f1397258c42a2498d535fd2510c78b882d5591edf42"
 dependencies = [
  "base64",
  "prost",

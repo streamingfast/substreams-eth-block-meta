@@ -1,6 +1,6 @@
 [package]
 name = "substreams-eth-block-meta"
-version = "0.2.0"
+version = "0.3.0"
 description = "Substream Ethereum Block Meta Substreams tracking block at day/month boundaries"
 edition = "2021"
 repository = "https://github.com/streamingfast/substreams-eth-block-meta"
@@ -14,9 +14,9 @@ anyhow = "1"
 prost = "0.11"
 prost-types = "0.11"
 substreams = "0.5.0"
-substreams-database-change = "0.2.0"
-substreams-entity-change = "0.3.0"
-substreams-sink-kv = { path = "/Users/stepd/repos/substreams-sink-kv" }
+substreams-database-change = "1.0.0"
+substreams-entity-change = "1.0.0"
+substreams-sink-kv = "0.1.1"
 substreams-ethereum = "0.8.0"
 chrono = { version = "0.4", features = [ "std" ], default-features = false }
 

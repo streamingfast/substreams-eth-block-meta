@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: "substreams_eth_block_meta"
-  version: v0.2.1
+  version: v0.3.0
 
 imports:
   database_change: https://github.com/streamingfast/substreams-database-change/releases/download/v0.1.0/substreams-database-change-v0.1.0.spkg
@@ -41,7 +41,7 @@ modules:
       - store: store_block_meta_end
         mode: deltas
     output:
-      type: proto:substreams.database.v1.DatabaseChanges
+      type: proto:sf.substreams.database.v1.DatabaseChanges
 
   - name: kv_out
     kind: map
@@ -51,7 +51,7 @@ modules:
       - store: store_block_meta_end
         mode: deltas
     output:
-      type: proto:substreams.kv.v1.KVOperations
+      type: proto:sf.substreams.kv.v1.KVOperations
 
   - name: graph_out
     kind: map
@@ -61,4 +61,4 @@ modules:
       - store: store_block_meta_end
         mode: deltas
     output:
-      type: proto:substreams.entity.v1.EntityChanges
+      type: proto:sf.substreams.entity.v1.EntityChanges
