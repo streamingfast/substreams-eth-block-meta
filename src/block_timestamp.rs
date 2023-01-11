@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context};
+use anyhow::anyhow;
 use chrono::{Datelike, Duration, NaiveDate, NaiveDateTime, NaiveTime};
 use substreams_database_change::change::AsString;
 use substreams_ethereum::pb::eth::v2 as eth;
@@ -12,14 +12,33 @@ impl BlockTimestamp {
     }
 
     pub fn try_from_key(key: &str) -> Result<Self, anyhow::Error> {
-        let millis = u64::from_str_radix(key, 10)
-            .with_context(|| format!("invalid timestamp key {}", key))?;
-        let seconds = millis / 1000;
-        let nanos = (millis % 1000) * 1000000;
+        let mut parts = key.split(":");
 
-        NaiveDateTime::from_timestamp_opt(seconds as i64, nanos as u32)
-            .map(|x| BlockTimestamp(x))
-            .ok_or_else(|| anyhow!("invalid date for timestamp key {}", key))
+        match parts.next().unwrap() {
+            "day" => {
+                let first_or_last = parts.next().unwrap();
+                let date = NaiveDate::parse_from_str(parts.next().unwrap(), "%Y%m%d").unwrap();
+                match first_or_last {
+                    "first" => Ok(BlockTimestamp(date.and_hms_opt(0, 0, 0).unwrap())),
+                    "last" => Ok(BlockTimestamp(
+                        date.and_hms_milli_opt(23, 59, 59, 999).unwrap(),
+                    )),
+                    _ => Err(anyhow!("invalid key")),
+                }
+            }
+            "month" => {
+                let first_or_last = parts.next().unwrap();
+                let date = NaiveDate::parse_from_str(parts.next().unwrap(), "%Y%m").unwrap();
+                match first_or_last {
+                    "first" => Ok(BlockTimestamp(date.and_hms_opt(0, 0, 0).unwrap())),
+                    "last" => Ok(BlockTimestamp(
+                        date.and_hms_milli_opt(23, 59, 59, 999).unwrap(),
+                    )),
+                    _ => Err(anyhow!("invalid key")),
+                }
+            }
+            _ => Err(anyhow!("invalid key")),
+        }
     }
 
     pub fn from_block(blk: &eth::Block) -> Self {
@@ -37,7 +56,7 @@ impl BlockTimestamp {
     }
 
     pub fn start_of_day_key(&self) -> String {
-        to_key(self.start_of_day())
+        self.start_of_day().format("day:first:%Y%m%d").to_string()
     }
 
     pub fn start_of_month(&self) -> NaiveDateTime {
@@ -49,7 +68,7 @@ impl BlockTimestamp {
     }
 
     pub fn start_of_month_key(&self) -> String {
-        to_key(self.start_of_month())
+        self.start_of_month().format("month:first:%Y%m").to_string()
     }
 
     pub fn end_of_day(&self) -> NaiveDateTime {
@@ -57,7 +76,7 @@ impl BlockTimestamp {
     }
 
     pub fn end_of_day_key(&self) -> String {
-        to_key(self.end_of_day())
+        self.end_of_day().format("day:last:%Y%m%d").to_string()
     }
 
     pub fn end_of_month(&self) -> NaiveDateTime {
@@ -75,7 +94,7 @@ impl BlockTimestamp {
     }
 
     pub fn end_of_month_key(&self) -> String {
-        to_key(self.end_of_month())
+        self.end_of_month().format("month:last:%Y%m").to_string()
     }
 }
 
@@ -105,10 +124,6 @@ impl Into<String> for BlockTimestamp {
 
 fn last_time() -> NaiveTime {
     NaiveTime::from_hms_nano_opt(23, 59, 59, 999999999).unwrap()
-}
-
-fn to_key(input: NaiveDateTime) -> String {
-    input.timestamp_millis().to_string()
 }
 
 #[cfg(test)]
