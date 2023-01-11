@@ -1,6 +1,6 @@
 [package]
 name = "substreams-eth-block-meta"
-version = "0.3.1"
+version = "0.4.0"
 description = "Substream Ethereum Block Meta Substreams tracking block at day/month boundaries"
 edition = "2021"
 repository = "https://github.com/streamingfast/substreams-eth-block-meta"

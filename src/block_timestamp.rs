@@ -1,10 +1,26 @@
 use anyhow::anyhow;
-use chrono::{Datelike, Duration, NaiveDate, NaiveDateTime, NaiveTime};
+use chrono::{Datelike, Duration, Months, NaiveDate, NaiveDateTime, NaiveTime};
 use substreams_database_change::change::AsString;
 use substreams_ethereum::pb::eth::v2 as eth;
 
 #[derive(Debug, PartialEq)]
 pub struct BlockTimestamp(chrono::NaiveDateTime);
+
+fn first_day_of_month(input: &str) -> NaiveDate {
+    let with_day_01 = format!("{}01", input);
+    NaiveDate::parse_from_str(&with_day_01, "%Y%m%d").unwrap()
+}
+
+fn last_day_of_month(input: &str) -> NaiveDate {
+    let with_day_01 = format!("{}01", input);
+
+    NaiveDate::parse_from_str(&with_day_01, "%Y%m%d")
+        .unwrap()
+        .pred_opt() // minus one day
+        .unwrap()
+        .checked_add_months(Months::new(1)) // plus one month
+        .unwrap()
+}
 
 impl BlockTimestamp {
     pub fn from_key(key: &str) -> Self {
@@ -26,17 +42,19 @@ impl BlockTimestamp {
                     _ => Err(anyhow!("invalid key")),
                 }
             }
-            "month" => {
-                let first_or_last = parts.next().unwrap();
-                let date = NaiveDate::parse_from_str(parts.next().unwrap(), "%Y%m").unwrap();
-                match first_or_last {
-                    "first" => Ok(BlockTimestamp(date.and_hms_opt(0, 0, 0).unwrap())),
-                    "last" => Ok(BlockTimestamp(
-                        date.and_hms_milli_opt(23, 59, 59, 999).unwrap(),
-                    )),
-                    _ => Err(anyhow!("invalid key")),
-                }
-            }
+            "month" => match parts.next().unwrap() {
+                "first" => Ok(BlockTimestamp(
+                    first_day_of_month(parts.next().unwrap())
+                        .and_hms_opt(0, 0, 0)
+                        .unwrap(),
+                )),
+                "last" => Ok(BlockTimestamp(
+                    last_day_of_month(parts.next().unwrap())
+                        .and_hms_milli_opt(23, 59, 59, 999)
+                        .unwrap(),
+                )),
+                _ => Err(anyhow!("invalid key")),
+            },
             _ => Err(anyhow!("invalid key")),
         }
     }
