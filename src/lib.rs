@@ -15,7 +15,7 @@ use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};
 use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_entity_change::pb::entity::EntityChanges;
-use substreams_ethereum::pb::eth::v2 as eth;
+use substreams_ethereum::pb::eth::v2::{self as eth};
 use substreams_sink_kv::pb::kv::KvOperations;
 
 #[substreams::handlers::store]
