@@ -19,8 +19,12 @@ use substreams_ethereum::pb::eth::v2 as eth;
 use substreams_sink_kv::pb::kv::KvOperations;
 
 #[substreams::handlers::store]
-fn store_block_meta_start(blk: eth::Block, s: StoreSetIfNotExistsProto<BlockMeta>) {
+fn store_block_meta_start(params: String, blk: eth::Block, s: StoreSetIfNotExistsProto<BlockMeta>) {
     let (timestamp, meta) = block_to_block_meta(blk);
+
+    if params != "" {
+        panic!("params: {}", params);
+    }
 
     s.set_if_not_exists(meta.number, timestamp.start_of_day_key(), &meta);
     s.set_if_not_exists(meta.number, timestamp.start_of_month_key(), &meta);

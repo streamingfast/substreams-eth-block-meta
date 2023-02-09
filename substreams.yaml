@@ -24,6 +24,7 @@ modules:
     updatePolicy: set_if_not_exists
     valueType: proto:eth.block_meta.v1.BlockMeta
     inputs:
+      - params: string
       - source: sf.ethereum.type.v2.Block
 
   - name: store_block_meta_end
