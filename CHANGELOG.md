@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.1
+
+* Updated `kv_out` output type from `proto:sf.substreams.kv.v1.KVOperations` to `proto:sf.substreams.sink.kv.v1.KVOperations`
+
 ## v0.4.0
 
 * Changed key format to human-readable syntax:
