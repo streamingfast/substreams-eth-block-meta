@@ -51,7 +51,7 @@ modules:
       - store: store_block_meta_end
         mode: deltas
     output:
-      type: proto:sf.substreams.kv.v1.KVOperations
+      type: proto:sf.substreams.sink.kv.v1.KVOperations
 
   - name: graph_out
     kind: map
