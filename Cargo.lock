@@ -765,9 +765,9 @@ dependencies = [
 
 [[package]]
 name = "substreams-entity-change"
-version = "1.0.0"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e190a96a9baed17f3d16af8b375a236d1b549dbf86b6ff142417fc1cd57eeeb9"
+checksum = "d5fae0dac9eaf0a2d5b626a8afe039f87eb3a353bd91a419aa56f6bcf8a05302"
 dependencies = [
  "base64",
  "prost",
