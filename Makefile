@@ -1,6 +1,13 @@
 ENDPOINT ?= mainnet.eth.streamingfast.io:443
-GRAPH_CONFIG ?= ../graph-node-dev/config/graphman.toml
 STOP_BLOCK ?= +10
+
+# Deployement to `substreams-sink-postgres` config
+IPFS_ENDPOINT ?= http://localhost:5001
+GRAPH_NODE_ENDPOINT ?= http://localhost:8020
+GRAPHMAN_CONFIG ?= ../graph-node-dev/config/graphman.toml
+
+# Deployement to `graph-node` config (defaults is for a local deployment)
+POSTGRESQL_DSN ?= psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-node?sslmode=disable
 
 .PHONY: build
 build:
@@ -26,12 +33,17 @@ codegen:
 package: build
 	substreams pack -o substreams.spkg substreams.yaml
 
-.PHONE: deploy_local
-deploy_local: package
-	graph build --ipfs http://localhost:5001 subgraph.yaml
-	graph create block_meta --node http://127.0.0.1:8020
-	graph deploy --node http://127.0.0.1:8020 --ipfs http://127.0.0.1:5001 --version-label v0.0.1 block_meta subgraph.yaml
+.PHONE: deploy_graph_node
+deploy_graph_node: package
+	graph build --ipfs $(IPFS_ENDPOINT) subgraph.yaml
+	graph create block_meta --node $(GRAPH_NODE_ENDPOINT)
+	graph deploy --node $(GRAPH_NODE_ENDPOINT) --ipfs $(IPFS_ENDPOINT) --version-label v0.0.1 block_meta subgraph.yaml
 
-.PHONE: undeploy_local
-undeploy_local:
-	graphman --config "$(GRAPH_CONFIG)" drop --force block_meta
+.PHONE: undeploy_graph_node
+undeploy_graph_node:
+	graphman --config "$(GRAPHMAN_CONFIG)" drop --force block_meta
+
+.PHONE: sink_postgres
+sink_postgres: package
+	substreams-sink-postgres setup --ignore-duplicate-table-errors "$(POSTGRESQL_DSN)" schema.sql
+	substreams-sink-postgres run $(POSTGRESQL_DSN) $(ENDPOINT) "substreams.spkg" db_out

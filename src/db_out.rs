@@ -28,7 +28,7 @@ pub fn block_meta_to_database_changes(
                 delta.old_value,
                 delta.new_value,
             ),
-            Operation::Delete => todo!(),
+            Operation::Delete => panic!("delete should not happen"),
             x => panic!("unsupported opeation {:?}", x),
         }
     }
