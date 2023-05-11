@@ -2,8 +2,8 @@ ENDPOINT ?= mainnet.eth.streamingfast.io:443
 STOP_BLOCK ?= +10
 
 # Deployement to `substreams-sink-postgres` config
-IPFS_ENDPOINT ?= http://localhost:5001
-GRAPH_NODE_ENDPOINT ?= http://localhost:8020
+IPFS_ENDPOINT ?= http://127.0.0.1:5001
+GRAPH_NODE_ENDPOINT ?= http://127.0.0.1:8020
 GRAPHMAN_CONFIG ?= ../graph-node-dev/config/graphman.toml
 
 # Deployement to `graph-node` config (defaults is for a local deployment)

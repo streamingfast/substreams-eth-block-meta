@@ -1,4 +1,4 @@
-specVersion: 0.0.4
+specVersion: 0.0.6
 description: Ethereum Block Meta Subgraph powered by Substreams
 repository: https://github.com/streamingfast/substreams-eth-block-meta.git
 schema:
