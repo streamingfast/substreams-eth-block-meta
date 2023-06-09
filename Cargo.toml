@@ -13,11 +13,11 @@ crate-type = ["cdylib"]
 anyhow = "1"
 prost = "0.11"
 prost-types = "0.11"
-substreams = "0.5.0"
-substreams-database-change = "1.0.0"
-substreams-entity-change = "1.1"
+substreams = "0.5"
+substreams-database-change = "1.1"
+substreams-entity-change = "1.2"
 substreams-sink-kv = "0.1.1"
-substreams-ethereum = "0.8.0"
+substreams-ethereum = "0.9"
 chrono = { version = "0.4", features = [ "std" ], default-features = false }
 
 [profile.release]

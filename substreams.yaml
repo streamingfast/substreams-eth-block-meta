@@ -4,8 +4,8 @@ package:
   version: v0.4.1
 
 imports:
-  database_change: https://github.com/streamingfast/substreams-database-change/releases/download/v1.0.0/substreams-database-change-v1.0.0.spkg
-  entities_change: https://github.com/streamingfast/substreams-entity-change/releases/download/v1.1.0/substreams-entity-change-v1.1.0.spkg
+  database_change: https://github.com/streamingfast/substreams-database-change/releases/download/v1.1.1/substreams-database-change-v1.1.1.spkg
+  entities_change: https://github.com/streamingfast/substreams-entity-change/releases/download/v1.2.1/substreams-entity-change-v1.2.1.spkg
 
 protobuf:
   files:

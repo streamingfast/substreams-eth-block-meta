@@ -14,9 +14,10 @@ use substreams::errors::Error;
 use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};
 use substreams_database_change::pb::database::DatabaseChanges;
+use substreams_database_change::tables::Tables;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_ethereum::pb::eth::v2::{self as eth};
-use substreams_sink_kv::pb::kv::KvOperations;
+use substreams_sink_kv::pb::sf::substreams::sink::kv::v1::KvOperations;
 
 #[substreams::handlers::store]
 fn store_block_meta_start(blk: eth::Block, s: StoreSetIfNotExistsProto<BlockMeta>) {
@@ -39,11 +40,11 @@ pub fn db_out(
     block_meta_start: store::Deltas<DeltaProto<BlockMeta>>,
     block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
 ) -> Result<DatabaseChanges, Error> {
-    let mut database_changes: DatabaseChanges = Default::default();
-    db::block_meta_to_database_changes(&mut database_changes, block_meta_start);
-    db::block_meta_to_database_changes(&mut database_changes, block_meta_end);
+    let mut changes: Tables = Tables::new();
+    db::block_meta_to_database_changes(&mut changes, block_meta_start);
+    db::block_meta_to_database_changes(&mut changes, block_meta_end);
 
-    Ok(database_changes)
+    Ok(changes.to_database_changes())
 }
 
 #[substreams::handlers::map]
