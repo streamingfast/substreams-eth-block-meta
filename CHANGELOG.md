@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.3
+
+* Updated `graph_out` to use new `substreams_entity_change::tables:Tables` abstraction (output format stays the same).
+
 ## v0.4.2
 
 * Updated `db_out` output type from `proto:sf.substreams.databse.v1.DatabaseChanges` to `proto:sf.substreams.sink.database.v1.DatabaseChanges`.

@@ -1,6 +1,7 @@
 use anyhow::anyhow;
 use chrono::{Datelike, Duration, Months, NaiveDate, NaiveDateTime, NaiveTime};
-use substreams_database_change::{change::AsString, tables::ToDatabaseValue};
+use substreams_database_change::change::AsString;
+use substreams_entity_change::pb::entity::{value::Typed, Value};
 use substreams_ethereum::pb::eth::v2 as eth;
 
 #[derive(Debug, PartialEq)]
@@ -116,7 +117,15 @@ impl BlockTimestamp {
     }
 }
 
-impl ToDatabaseValue for BlockTimestamp {
+impl substreams_entity_change::tables::ToValue for BlockTimestamp {
+    fn to_value(self) -> Value {
+        Value {
+            typed: Some(Typed::String(self.to_string())),
+        }
+    }
+}
+
+impl substreams_database_change::tables::ToDatabaseValue for BlockTimestamp {
     fn to_value(self) -> String {
         self.to_string()
     }

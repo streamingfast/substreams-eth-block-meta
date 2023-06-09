@@ -14,7 +14,6 @@ use substreams::errors::Error;
 use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};
 use substreams_database_change::pb::database::DatabaseChanges;
-use substreams_database_change::tables::Tables;
 use substreams_entity_change::pb::entity::EntityChanges;
 use substreams_ethereum::pb::eth::v2::{self as eth};
 use substreams_sink_kv::pb::sf::substreams::sink::kv::v1::KvOperations;
@@ -40,11 +39,11 @@ pub fn db_out(
     block_meta_start: store::Deltas<DeltaProto<BlockMeta>>,
     block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
 ) -> Result<DatabaseChanges, Error> {
-    let mut changes: Tables = Tables::new();
-    db::block_meta_to_database_changes(&mut changes, block_meta_start);
-    db::block_meta_to_database_changes(&mut changes, block_meta_end);
+    let mut tables = substreams_database_change::tables::Tables::new();
+    db::block_meta_to_database_changes(&mut tables, block_meta_start);
+    db::block_meta_to_database_changes(&mut tables, block_meta_end);
 
-    Ok(changes.to_database_changes())
+    Ok(tables.to_database_changes())
 }
 
 #[substreams::handlers::map]
@@ -64,11 +63,11 @@ pub fn graph_out(
     block_meta_start: store::Deltas<DeltaProto<BlockMeta>>,
     block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
 ) -> Result<EntityChanges, Error> {
-    let mut entity_changes: EntityChanges = Default::default();
-    graph::block_meta_to_entities_changes(&mut entity_changes, block_meta_start);
-    graph::block_meta_to_entities_changes(&mut entity_changes, block_meta_end);
+    let mut tables = substreams_entity_change::tables::Tables::new();
+    graph::block_meta_to_entities_changes(&mut tables, block_meta_start);
+    graph::block_meta_to_entities_changes(&mut tables, block_meta_end);
 
-    Ok(entity_changes)
+    Ok(tables.to_entity_changes())
 }
 
 fn block_to_block_meta(blk: eth::Block) -> (BlockTimestamp, BlockMeta) {
