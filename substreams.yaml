@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
   name: "substreams_eth_block_meta"
-  version: v0.4.2
+  version: v0.4.3
 
 imports:
   database_change: https://github.com/streamingfast/substreams-database-change/releases/download/v1.1.1/substreams-database-change-v1.1.1.spkg
