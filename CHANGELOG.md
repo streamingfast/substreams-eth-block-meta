@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.2
+
+* Updated `db_out` output type from `proto:sf.substreams.databse.v1.DatabaseChanges` to `proto:sf.substreams.sink.database.v1.DatabaseChanges`.
+
+  > **Note** You need to update to latest `substreams-sink-postgres`, `substreams-sink-mongodb` to use this new package id.
+
 ## v0.4.1
 
 * Updated `kv_out` output type from `proto:sf.substreams.kv.v1.KVOperations` to `proto:sf.substreams.sink.kv.v1.KVOperations`

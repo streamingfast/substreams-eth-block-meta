@@ -3,5 +3,7 @@
 .idea
 .DS_Store
 buf.gen.yaml
+/build
+/dist
 /target
 *.spkg
