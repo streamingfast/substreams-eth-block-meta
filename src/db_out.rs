@@ -1,4 +1,4 @@
-use crate::{block_timestamp::BlockTimestamp, pb::block_meta::BlockMeta};
+use crate::{block_timestamp::BlockTimestamp, pb::eth::block_meta::v1::BlockMeta};
 use substreams::{
     store::{self, DeltaProto},
     Hex,

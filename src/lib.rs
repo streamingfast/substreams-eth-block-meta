@@ -9,7 +9,7 @@ mod pb;
 mod schema;
 
 use block_timestamp::BlockTimestamp;
-use pb::block_meta::BlockMeta;
+use pb::eth::block_meta::v1::BlockMeta;
 use substreams::errors::Error;
 use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};

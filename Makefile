@@ -25,9 +25,9 @@ stream_graph: build
 stream_kv: build
 	substreams run -e $(ENDPOINT) substreams.yaml kv_out -t $(STOP_BLOCK)
 
-.PHONY: codegen
-codegen:
-	substreams protogen ./substreams.yaml --exclude-paths="sf/substreams,google"
+.PHONY: protogen
+protogen:
+	substreams protogen ./substreams.yaml --exclude-paths="google,sf/substreams,substreams/sink/kv,database.proto"
 
 .PHONE: package
 package: build
