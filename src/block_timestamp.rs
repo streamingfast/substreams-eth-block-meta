@@ -184,13 +184,8 @@ mod tests {
     #[test]
     fn it_block_timestamp_try_from_key() {
         assert_eq!(
-            BlockTimestamp::from_key("1435708800000"),
-            timestamp(2015, 07, 01, 00, 00, 00, 000)
-        );
-
-        assert_eq!(
-            BlockTimestamp::from_key("1669852799999"),
-            timestamp(2022, 11, 30, 23, 59, 59, 999)
+            BlockTimestamp::from_key("day:first:20210705"),
+            timestamp(2021, 07, 05, 00, 00, 00, 000)
         );
     }
 
