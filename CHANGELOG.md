@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1
+
+* Fixed ordering of walked deltas by bumping to latest `substreams` crate.
+
 ## v0.5.0
 
 * Updated to latest version of crates `substreams-entity-change`, `substreams-database-change`, `substreams` and `substreams-ethereum`.
