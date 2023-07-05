@@ -3,10 +3,7 @@ use substreams_entity_change::tables::Tables;
 
 use crate::{block_timestamp::BlockTimestamp, pb::eth::block_meta::v1::BlockMeta};
 
-pub fn block_meta_to_entities_changes(
-    tables: &mut Tables,
-    deltas: store::Deltas<DeltaProto<BlockMeta>>,
-) {
+pub fn add_block_meta_to_tables(tables: &mut Tables, deltas: store::Deltas<DeltaProto<BlockMeta>>) {
     use substreams::pb::substreams::store_delta::Operation;
 
     for delta in deltas.deltas {

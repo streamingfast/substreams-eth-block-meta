@@ -6,7 +6,6 @@ mod graph;
 #[path = "kv_out.rs"]
 mod kv;
 mod pb;
-mod schema;
 
 use block_timestamp::BlockTimestamp;
 use pb::eth::block_meta::v1::BlockMeta;
@@ -15,11 +14,11 @@ use substreams::store::{DeltaProto, StoreSetIfNotExistsProto, StoreSetProto};
 use substreams::{prelude::*, store};
 use substreams_database_change::pb::database::DatabaseChanges;
 use substreams_entity_change::pb::entity::EntityChanges;
-use substreams_ethereum::pb::eth::v2::{self as eth};
+use substreams_ethereum::pb::eth::v2::Block;
 use substreams_sink_kv::pb::sf::substreams::sink::kv::v1::KvOperations;
 
 #[substreams::handlers::store]
-fn store_block_meta_start(blk: eth::Block, s: StoreSetIfNotExistsProto<BlockMeta>) {
+fn store_block_meta_start(blk: Block, s: StoreSetIfNotExistsProto<BlockMeta>) {
     let (timestamp, meta) = block_to_block_meta(blk);
 
     s.set_if_not_exists(meta.number, timestamp.start_of_day_key(), &meta);
@@ -27,7 +26,7 @@ fn store_block_meta_start(blk: eth::Block, s: StoreSetIfNotExistsProto<BlockMeta
 }
 
 #[substreams::handlers::store]
-fn store_block_meta_end(blk: eth::Block, s: StoreSetProto<BlockMeta>) {
+fn store_block_meta_end(blk: Block, s: StoreSetProto<BlockMeta>) {
     let (timestamp, meta) = block_to_block_meta(blk);
 
     s.set(meta.number, timestamp.end_of_day_key(), &meta);
@@ -40,8 +39,8 @@ pub fn db_out(
     block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
 ) -> Result<DatabaseChanges, Error> {
     let mut tables = substreams_database_change::tables::Tables::new();
-    db::block_meta_to_database_changes(&mut tables, block_meta_start);
-    db::block_meta_to_database_changes(&mut tables, block_meta_end);
+    db::add_block_meta_to_tables(&mut tables, block_meta_start);
+    db::add_block_meta_to_tables(&mut tables, block_meta_end);
 
     Ok(tables.to_database_changes())
 }
@@ -64,13 +63,13 @@ pub fn graph_out(
     block_meta_end: store::Deltas<DeltaProto<BlockMeta>>,
 ) -> Result<EntityChanges, Error> {
     let mut tables = substreams_entity_change::tables::Tables::new();
-    graph::block_meta_to_entities_changes(&mut tables, block_meta_start);
-    graph::block_meta_to_entities_changes(&mut tables, block_meta_end);
+    graph::add_block_meta_to_tables(&mut tables, block_meta_start);
+    graph::add_block_meta_to_tables(&mut tables, block_meta_end);
 
     Ok(tables.to_entity_changes())
 }
 
-fn block_to_block_meta(blk: eth::Block) -> (BlockTimestamp, BlockMeta) {
+fn block_to_block_meta(blk: Block) -> (BlockTimestamp, BlockMeta) {
     let timestamp = BlockTimestamp::from_block(&blk);
     let header = blk.header.unwrap();
 
