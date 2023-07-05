@@ -6,7 +6,7 @@ use crate::{block_timestamp::BlockTimestamp, pb::eth::block_meta::v1::BlockMeta}
 pub fn add_block_meta_to_tables(tables: &mut Tables, deltas: Deltas<DeltaProto<BlockMeta>>) {
     use substreams::pb::substreams::store_delta::Operation;
 
-    for delta in deltas {
+    for delta in deltas.into_iter() {
         match delta.operation {
             Operation::Create => push_create(
                 tables,

@@ -7,7 +7,7 @@ use crate::pb::eth::block_meta::v1::BlockMeta;
 pub fn block_meta_to_kv_ops(ops: &mut KvOperations, deltas: Deltas<DeltaProto<BlockMeta>>) {
     use substreams::pb::substreams::store_delta::Operation;
 
-    for delta in deltas {
+    for delta in deltas.into_iter() {
         match delta.operation {
             Operation::Create | Operation::Update => {
                 let val = proto::encode(&delta.new_value).unwrap();
