@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0
+
+* Updated to latest version of crates `substreams-entity-change`, `substreams-database-change`, `substreams` and `substreams-ethereum`.
+
 ## v0.4.3
 
 * Updated `graph_out` to use new `substreams_entity_change::tables:Tables` abstraction (output format stays the same).
