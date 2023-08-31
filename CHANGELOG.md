@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Fixed `graph_out` emitting wrong entity type.
+
 ## v0.5.1
 
 * Fixed ordering of walked deltas by bumping to latest `substreams` crate.

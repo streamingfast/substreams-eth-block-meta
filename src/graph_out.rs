@@ -23,7 +23,7 @@ pub fn add_block_meta_to_tables(tables: &mut Tables, deltas: Deltas<DeltaProto<B
 
 fn push_create(tables: &mut Tables, key: &str, timestamp: BlockTimestamp, value: BlockMeta) {
     tables
-        .create_row("block_meta", key)
+        .create_row("BlockMeta", key)
         .set("at", timestamp)
         .set("number", value.number)
         .set("hash", value.hash)
@@ -33,7 +33,7 @@ fn push_create(tables: &mut Tables, key: &str, timestamp: BlockTimestamp, value:
 
 fn push_update(tables: &mut Tables, key: &str, value: BlockMeta) {
     tables
-        .update_row("block_meta", key)
+        .update_row("BlockMeta", key)
         .set("number", value.number)
         .set("hash", value.hash)
         .set("parent_hash", value.parent_hash)
