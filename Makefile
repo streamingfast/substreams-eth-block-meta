@@ -13,28 +13,28 @@ POSTGRESQL_DSN ?= psql://dev-node:insecure-change-me-in-prod@localhost:5432/dev-
 build:
 	cargo build --target wasm32-unknown-unknown --release
 
-.PHONY: stream_db
-stream_db: build
-	substreams run -e $(ENDPOINT) substreams.yaml db_out -t $(STOP_BLOCK)
+.PHONY: db_out
+db_out: build
+	substreams run -e $(ENDPOINT) substreams.yaml db_out -t $(STOP_BLOCK) --debug-modules-output=store_block_meta_start,db_out
 
-.PHONY: stream_graph
-stream_graph: build
+.PHONY: graph_out
+graph_out: build
 	substreams run -e $(ENDPOINT) substreams.yaml graph_out -t $(STOP_BLOCK)
 
-.PHONY: stream_kv
-stream_kv: build
+.PHONY: kv_out
+kv_out: build
 	substreams run -e $(ENDPOINT) substreams.yaml kv_out -t $(STOP_BLOCK)
 
 .PHONY: protogen
 protogen:
 	substreams protogen ./substreams.yaml --exclude-paths="google,sf/substreams,substreams/sink/kv,database.proto"
 
-.PHONE: package
-package: build
+.PHONE: pack
+pack: build
 	substreams pack -o substreams.spkg substreams.yaml
 
 .PHONE: deploy_graph_node
-deploy_graph_node: package
+deploy_graph_node: pack
 	graph build --ipfs $(IPFS_ENDPOINT) subgraph.yaml
 	graph create block_meta --node $(GRAPH_NODE_ENDPOINT)
 	graph deploy --node $(GRAPH_NODE_ENDPOINT) --ipfs $(IPFS_ENDPOINT) --version-label v0.0.1 block_meta subgraph.yaml
@@ -44,6 +44,6 @@ undeploy_graph_node:
 	graphman --config "$(GRAPHMAN_CONFIG)" drop --force block_meta
 
 .PHONE: sink_postgres
-sink_postgres: package
+sink_postgres: pack
 	substreams-sink-postgres setup --ignore-duplicate-table-errors "$(POSTGRESQL_DSN)" schema.sql
 	substreams-sink-postgres run $(POSTGRESQL_DSN) $(ENDPOINT) "substreams.spkg" db_out

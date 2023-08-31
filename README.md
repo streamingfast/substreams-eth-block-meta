@@ -22,19 +22,15 @@ The `graph_out` module output element in format expected for ingestion into a Su
 This repository contains both the Substreams code and the Subgraph definition.
 
 ```
-# Compile & run module `store_block_meta_start` and `store_block_meta_end`
-make stream
+# Compile & run module `db_out`
+make db_out
 
 # Compile & run module `graph_out`
-make stream_graph
+make graph_out
 
-# Compile, package & deploy to local 'graph-node' instance`, available configuration:
-# - IPFS_ENDPOINT (defaults to 'http://localhost:5001')
-# - GRAPH_NODE_ENDPOINT (defaults to 'http://localhost:8020')
-make deploy_graph_node
+# Compile & run module `kv_out`
+make kv_out
 ```
-
-> You need a recent enough version of [graph-cli](https://github.com/graphprotocol/graph-tooling)
 
 ## Running the `db_out` module
 
@@ -73,6 +69,20 @@ make sink_postgres
 ```
 
 > **Warning** This is meant for show case purposes, running a sink in production should **always** be run on a persistently stored compiled Substreams package (extension `.spkg`).
+
+### Sink to `graph-node`
+
+This assumes a local `graph-node` binary available (running `graph-node` is outside of this guide).
+
+```bash
+# Compile, package & deploy to local 'graph-node' instance`, available configuration:
+# - IPFS_ENDPOINT (defaults to 'http://localhost:5001')
+# - GRAPH_NODE_ENDPOINT (defaults to 'http://localhost:8020')
+make deploy_graph_node
+```
+
+> [!NOTE]
+> You need a recent enough version of [graph-cli](https://github.com/graphprotocol/graph-tooling)
 
 ## Running other output modules
 
