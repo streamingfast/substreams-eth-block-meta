@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Updated to `substreams` version`0.5.10` and `substreams-ethereum` version `0.9.4`.
+
 * Fixed `graph_out` emitting wrong entity type.
 
 ## v0.5.1
